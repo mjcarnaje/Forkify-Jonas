@@ -49,6 +49,7 @@ export default class Recipe {
 			'cup',
 			'pound',
 		];
+		const units = [...unitShort, 'kg', 'g'];
 
 		const newIngredients = this.ingredients.map((el) => {
 			let ingredient = el.toLowerCase();
@@ -60,9 +61,38 @@ export default class Recipe {
 
 			const wordByWord = ingredient.split(' ');
 			const unitIndex = wordByWord.findIndex((unitShortWord) =>
-				unitShort.includes(unitShortWord)
+				units.includes(unitShortWord)
 			);
-			return unitIndex;
+
+			let objectOfIngredients;
+
+			if (unitIndex > -1) {
+				const countBeforeUnit = wordByWord.slice(0, unitIndex);
+				let count;
+				if (countBeforeUnit.length === 1) {
+					count = eval(wordByWord[0].replace('-', '+'));
+				} else {
+					count = eval(wordByWord.slice(0, unitIndex).join('+'));
+				}
+				objectOfIngredients = {
+					count,
+					unit: wordByWord[unitIndex],
+					ingredient: wordByWord.slice(unitIndex + 1).join(' '),
+				};
+			} else if (parseInt(wordByWord[0], 10)) {
+				objectOfIngredients = {
+					count: parseInt(wordByWord[0], 10),
+					unit: '',
+					ingredient: wordByWord.slice(1).join(' '),
+				};
+			} else if (unitIndex === -1) {
+				objectOfIngredients = {
+					count: 1,
+					unit: '',
+					ingredient,
+				};
+			}
+			return objectOfIngredients;
 		});
 
 		this.ingredients = newIngredients;
