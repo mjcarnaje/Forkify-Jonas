@@ -58,7 +58,11 @@ export default class Recipe {
 
 			ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
 
-			return ingredient;
+			const wordByWord = ingredient.split(' ');
+			const unitIndex = wordByWord.findIndex((unitShortWord) =>
+				unitShort.includes(unitShortWord)
+			);
+			return unitIndex;
 		});
 
 		this.ingredients = newIngredients;
