@@ -36,7 +36,6 @@ const controlSearch = async () => {
 		}
 	}
 };
-controlSearch();
 
 elements.searchForm.addEventListener('submit', (e) => {
 	e.preventDefault();
@@ -61,11 +60,12 @@ const controlRecipe = async () => {
 		state.recipe = new Recipe(id);
 
 		try {
-			//Get recipe data
+			//Get recipe data and parse Ingredients
 			await state.recipe.getRecipe();
 			//Calculate servings and time
 			state.recipe.calcTime();
 			state.recipe.calcServing();
+			state.recipe.parseIngredients();
 			//Render Recipe
 			console.log(state.recipe);
 		} catch (err) {
